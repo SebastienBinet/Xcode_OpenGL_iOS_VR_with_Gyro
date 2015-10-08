@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0700"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "96A1C4811BC6D4EA0022270F"
+               BuildableName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app"
+               BlueprintName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES"
+               ReferencedContainer = "container:SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "96A1C49E1BC6D4EA0022270F"
+               BuildableName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests.xctest"
+               BlueprintName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests"
+               ReferencedContainer = "container:SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "96A1C4A91BC6D4EA0022270F"
+               BuildableName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest"
+               BlueprintName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests"
+               ReferencedContainer = "container:SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "96A1C4811BC6D4EA0022270F"
+            BuildableName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app"
+            BlueprintName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES"
+            ReferencedContainer = "container:SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "96A1C4811BC6D4EA0022270F"
+            BuildableName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app"
+            BlueprintName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES"
+            ReferencedContainer = "container:SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <AdditionalOptions>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "96A1C4811BC6D4EA0022270F"
+            BuildableName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app"
+            BlueprintName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES"
+            ReferencedContainer = "container:SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

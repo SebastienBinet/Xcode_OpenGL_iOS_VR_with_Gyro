@@ -1,0 +1,534 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		96A1C4871BC6D4EA0022270F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4861BC6D4EA0022270F /* main.m */; };
+		96A1C48A1BC6D4EA0022270F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4891BC6D4EA0022270F /* AppDelegate.m */; };
+		96A1C48C1BC6D4EA0022270F /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C48B1BC6D4EA0022270F /* Shader.fsh */; };
+		96A1C48E1BC6D4EA0022270F /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C48D1BC6D4EA0022270F /* Shader.vsh */; };
+		96A1C4911BC6D4EA0022270F /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4901BC6D4EA0022270F /* GameViewController.m */; };
+		96A1C4941BC6D4EA0022270F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C4921BC6D4EA0022270F /* Main.storyboard */; };
+		96A1C4961BC6D4EA0022270F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C4951BC6D4EA0022270F /* Assets.xcassets */; };
+		96A1C4991BC6D4EA0022270F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C4971BC6D4EA0022270F /* LaunchScreen.storyboard */; };
+		96A1C4A41BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4A31BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m */; };
+		96A1C4AF1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		96A1C4A01BC6D4EA0022270F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 96A1C47A1BC6D4E90022270F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 96A1C4811BC6D4EA0022270F;
+			remoteInfo = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+		};
+		96A1C4AB1BC6D4EA0022270F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 96A1C47A1BC6D4E90022270F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 96A1C4811BC6D4EA0022270F;
+			remoteInfo = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		96A1C4821BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		96A1C4861BC6D4EA0022270F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		96A1C4881BC6D4EA0022270F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		96A1C4891BC6D4EA0022270F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		96A1C48B1BC6D4EA0022270F /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
+		96A1C48D1BC6D4EA0022270F /* Shader.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
+		96A1C48F1BC6D4EA0022270F /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		96A1C4901BC6D4EA0022270F /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		96A1C4931BC6D4EA0022270F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		96A1C4951BC6D4EA0022270F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		96A1C4981BC6D4EA0022270F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		96A1C49A1BC6D4EA0022270F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96A1C49F1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		96A1C4A31BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m; sourceTree = "<group>"; };
+		96A1C4A51BC6D4EA0022270F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96A1C4AA1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m; sourceTree = "<group>"; };
+		96A1C4B01BC6D4EA0022270F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		96A1C47F1BC6D4EA0022270F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96A1C49C1BC6D4EA0022270F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96A1C4A71BC6D4EA0022270F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		96A1C4791BC6D4E90022270F = {
+			isa = PBXGroup;
+			children = (
+				96A1C4841BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */,
+				96A1C4A21BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests */,
+				96A1C4AD1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests */,
+				96A1C4831BC6D4EA0022270F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		96A1C4831BC6D4EA0022270F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				96A1C4821BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app */,
+				96A1C49F1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests.xctest */,
+				96A1C4AA1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		96A1C4841BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */ = {
+			isa = PBXGroup;
+			children = (
+				96A1C4881BC6D4EA0022270F /* AppDelegate.h */,
+				96A1C4891BC6D4EA0022270F /* AppDelegate.m */,
+				96A1C48B1BC6D4EA0022270F /* Shader.fsh */,
+				96A1C48D1BC6D4EA0022270F /* Shader.vsh */,
+				96A1C48F1BC6D4EA0022270F /* GameViewController.h */,
+				96A1C4901BC6D4EA0022270F /* GameViewController.m */,
+				96A1C4921BC6D4EA0022270F /* Main.storyboard */,
+				96A1C4951BC6D4EA0022270F /* Assets.xcassets */,
+				96A1C4971BC6D4EA0022270F /* LaunchScreen.storyboard */,
+				96A1C49A1BC6D4EA0022270F /* Info.plist */,
+				96A1C4851BC6D4EA0022270F /* Supporting Files */,
+			);
+			path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+			sourceTree = "<group>";
+		};
+		96A1C4851BC6D4EA0022270F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				96A1C4861BC6D4EA0022270F /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		96A1C4A21BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests */ = {
+			isa = PBXGroup;
+			children = (
+				96A1C4A31BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m */,
+				96A1C4A51BC6D4EA0022270F /* Info.plist */,
+			);
+			path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests";
+			sourceTree = "<group>";
+		};
+		96A1C4AD1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests */ = {
+			isa = PBXGroup;
+			children = (
+				96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */,
+				96A1C4B01BC6D4EA0022270F /* Info.plist */,
+			);
+			path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		96A1C4811BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 96A1C4B31BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES" */;
+			buildPhases = (
+				96A1C47E1BC6D4EA0022270F /* Sources */,
+				96A1C47F1BC6D4EA0022270F /* Frameworks */,
+				96A1C4801BC6D4EA0022270F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+			productName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+			productReference = 96A1C4821BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app */;
+			productType = "com.apple.product-type.application";
+		};
+		96A1C49E1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 96A1C4B61BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests" */;
+			buildPhases = (
+				96A1C49B1BC6D4EA0022270F /* Sources */,
+				96A1C49C1BC6D4EA0022270F /* Frameworks */,
+				96A1C49D1BC6D4EA0022270F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				96A1C4A11BC6D4EA0022270F /* PBXTargetDependency */,
+			);
+			name = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests";
+			productName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests";
+			productReference = 96A1C49F1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		96A1C4A91BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 96A1C4B91BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests" */;
+			buildPhases = (
+				96A1C4A61BC6D4EA0022270F /* Sources */,
+				96A1C4A71BC6D4EA0022270F /* Frameworks */,
+				96A1C4A81BC6D4EA0022270F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				96A1C4AC1BC6D4EA0022270F /* PBXTargetDependency */,
+			);
+			name = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests";
+			productName = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests";
+			productReference = 96A1C4AA1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		96A1C47A1BC6D4E90022270F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Sebastien Binet";
+				TargetAttributes = {
+					96A1C4811BC6D4EA0022270F = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = SQW876G8H2;
+					};
+					96A1C49E1BC6D4EA0022270F = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = SQW876G8H2;
+						TestTargetID = 96A1C4811BC6D4EA0022270F;
+					};
+					96A1C4A91BC6D4EA0022270F = {
+						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = SQW876G8H2;
+						TestTargetID = 96A1C4811BC6D4EA0022270F;
+					};
+				};
+			};
+			buildConfigurationList = 96A1C47D1BC6D4E90022270F /* Build configuration list for PBXProject "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 96A1C4791BC6D4E90022270F;
+			productRefGroup = 96A1C4831BC6D4EA0022270F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				96A1C4811BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */,
+				96A1C49E1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests */,
+				96A1C4A91BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		96A1C4801BC6D4EA0022270F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96A1C4941BC6D4EA0022270F /* Main.storyboard in Resources */,
+				96A1C48E1BC6D4EA0022270F /* Shader.vsh in Resources */,
+				96A1C4961BC6D4EA0022270F /* Assets.xcassets in Resources */,
+				96A1C4991BC6D4EA0022270F /* LaunchScreen.storyboard in Resources */,
+				96A1C48C1BC6D4EA0022270F /* Shader.fsh in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96A1C49D1BC6D4EA0022270F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96A1C4A81BC6D4EA0022270F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		96A1C47E1BC6D4EA0022270F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96A1C48A1BC6D4EA0022270F /* AppDelegate.m in Sources */,
+				96A1C4911BC6D4EA0022270F /* GameViewController.m in Sources */,
+				96A1C4871BC6D4EA0022270F /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96A1C49B1BC6D4EA0022270F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96A1C4A41BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96A1C4A61BC6D4EA0022270F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				96A1C4AF1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		96A1C4A11BC6D4EA0022270F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 96A1C4811BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */;
+			targetProxy = 96A1C4A01BC6D4EA0022270F /* PBXContainerItemProxy */;
+		};
+		96A1C4AC1BC6D4EA0022270F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 96A1C4811BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */;
+			targetProxy = 96A1C4AB1BC6D4EA0022270F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		96A1C4921BC6D4EA0022270F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				96A1C4931BC6D4EA0022270F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		96A1C4971BC6D4EA0022270F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				96A1C4981BC6D4EA0022270F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		96A1C4B11BC6D4EA0022270F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		96A1C4B21BC6D4EA0022270F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		96A1C4B41BC6D4EA0022270F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ES";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		96A1C4B51BC6D4EA0022270F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ES";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		96A1C4B71BC6D4EA0022270F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ESTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+			};
+			name = Debug;
+		};
+		96A1C4B81BC6D4EA0022270F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ESTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES.app/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+			};
+			name = Release;
+		};
+		96A1C4BA1BC6D4EA0022270F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ESUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		96A1C4BB1BC6D4EA0022270F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ESUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES";
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		96A1C47D1BC6D4E90022270F /* Build configuration list for PBXProject "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96A1C4B11BC6D4EA0022270F /* Debug */,
+				96A1C4B21BC6D4EA0022270F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		96A1C4B31BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96A1C4B41BC6D4EA0022270F /* Debug */,
+				96A1C4B51BC6D4EA0022270F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		96A1C4B61BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96A1C4B71BC6D4EA0022270F /* Debug */,
+				96A1C4B81BC6D4EA0022270F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		96A1C4B91BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96A1C4BA1BC6D4EA0022270F /* Debug */,
+				96A1C4BB1BC6D4EA0022270F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 96A1C47A1BC6D4E90022270F /* Project object */;
+}

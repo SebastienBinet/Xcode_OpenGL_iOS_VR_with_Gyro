@@ -1,6 +1,6 @@
 //
 //  GameViewController.m
-//  SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES
+//  to_delete
 //
 //  Created by Sebastien Binet on 2015-10-08.
 //  Copyright © 2015 Sebastien Binet. All rights reserved.
@@ -8,6 +8,19 @@
 
 #import "GameViewController.h"
 #import <OpenGLES/ES2/glext.h>
+
+///////////////////// Test Sbinet for motion
+#import <CoreMotion/CoreMotion.h>
+CMMotionManager *MyCMMotionManager;
+///////////////////// Test Sbinet for motion - end
+
+#define OBJECTS_CENTER_COORD                        0.0f, -1.0f, 4.0f
+#define SHOULD_TURN_ALL_OBJECTS_AROUND_FIXED_POINT  true
+#define SHOULD_MOVE_ALL_OBJECTS_AROUND_FIXED_POINT  false
+#define USE_SKY_BOX_INSTEAD_OF_2_SMALL_CUBES        true
+
+
+
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -28,59 +41,283 @@ enum
     NUM_ATTRIBUTES
 };
 
-GLfloat gCubeVertexData[216] = 
+#if USE_SKY_BOX_INSTEAD_OF_2_SMALL_CUBES
+#define NUMBER_SQUARE                               1 + 12
+#define NUMBER_FLOAT                                (NUMBER_SQUARE * 36)
+
+GLfloat gCubeVertexData[NUMBER_FLOAT] =
 {
     // Data layout for each line below is:
     // positionX, positionY, positionZ,     normalX, normalY, normalZ,
-    0.5f, -0.5f, -0.5f,        1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f,          1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, 0.5f,         1.0f, 0.0f, 0.0f,
+
+    // 1/6 of skybox
+    -0.5f, -0.5f, -0.5f,        1.0f, -1.0f, -1.0f,
+    -0.5f, 0.5f, -0.5f,         1.0f, 1.0f, -1.0f,
+    -0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f
+    ,
+    -0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f,
+    -0.5f, 0.5f, -0.5f,         1.0f, 1.0f, -1.0f,
+    -0.5f, 0.5f, 0.5f,          1.0f, 1.0f, 1.0f
+    ,
+    
+    
+    
+    
+    // small cube
+    0.5f -1, -0.5f - 1, -0.5f + 4.0f,        1.0f, -1.0f, -1.0f,
+    0.5f -1, 0.5f - 1, -0.5f + 4.0f,         1.0f, 1.0f, -1.0f,
+    0.5f -1, -0.5f - 1, 0.5f + 4.0f,         1.0f, -1.0f, 1.0f
+    ,
+    0.5f -1, -0.5f - 1, 0.5f + 4.0f,         1.0f, -1.0f, 1.0f,
+    0.5f -1, 0.5f - 1, -0.5f + 4.0f,         1.0f, 1.0f, -1.0f,
+    0.5f -1, 0.5f - 1, 0.5f + 4.0f,          1.0f, 1.0f, 1.0f
+    ,
+    
+    0.5f -1, 0.5f - 1, -0.5f + 4.0f,         0.0f, 1.0f, 0.0f,
+    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,        0.0f, 1.0f, 0.0f,
+    0.5f -1, 0.5f - 1, 0.5f + 4.0f,          0.0f, 1.0f, 0.0f,
+    0.5f -1, 0.5f - 1, 0.5f + 4.0f,          0.0f, 1.0f, 0.0f,
+    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,        0.0f, 1.0f, 0.0f,
+    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,         0.0f, 1.0f, 0.0f
+    ,
+    
+    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,     -1.0f, 1.0f, -1.0f,
+    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    -1.0f, -1.0f, -1.0f,
+    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
+    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
+    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    -1.0f, -1.0f, -1.0f,
+    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     -1.0f, -1.0f, 1.0f
+    ,
+    
+    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    0.0f, -1.0f, 0.0f,
+    0.5f -1, -0.5f - 1, -0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
+    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
+    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
+    0.5f -1, -0.5f - 1, -0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
+    0.5f -1, -0.5f - 1, 0.5f + 4.0f,      0.0f, -1.0f, 0.0f
+    ,
+    
+    0.5f -1, 0.5f - 1, 0.5f + 4.0f,       1.0f, 1.0f, 1.0f,
+    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
+    0.5f -1, -0.5f - 1, 0.5f + 4.0f,      1.0f, -1.0f, 1.0f
+    ,
+    0.5f -1, -0.5f - 1, 0.5f + 4.0f,      1.0f, -1.0f, 1.0f,
+    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
+    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     -1.0f, -1.0f, 1.0f
+    ,
+    
+    0.5f -1, -0.5f - 1, -0.5f + 4.0f,     0.0f, 0.0f, -1.0f,
+    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    0.0f, 0.0f, -1.0f,
+    0.5f -1, 0.5f - 1, -0.5f + 4.0f,      0.0f, 0.0f, -1.0f
+    ,
+    0.5f -1, 0.5f - 1, -0.5f + 4.0f,      0.0f, 0.0f, -1.0f,
+    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    0.0f, 0.0f, -1.0f,
+    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,     0.0f, 0.0f, -1.0f
+
+};
+
+#else
+
+#define NUMBER_SQUARE                               12
+#define NUMBER_FLOAT                                (NUMBER_SQUARE * 36)
+
+GLfloat gCubeVertexData[NUMBER_FLOAT] =
+{
+    // Data layout for each line below is:
+    // positionX, positionY, positionZ,     normalX, normalY, normalZ,
+    0.5f, -0.5f, -0.5f,        1.0f, -1.0f, -1.0f,
+    0.5f, 0.5f - 1, -0.5f,         1.0f, 1.0f, -1.0f,
+    0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f
+    ,
+    0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f,
+    0.5f, 0.5f, -0.5f,         1.0f, 1.0f, -1.0f,
+    0.5f, 0.5f, 0.5f,          1.0f, 1.0f, 1.0f
+    ,
     
     0.5f, 0.5f, -0.5f,         0.0f, 1.0f, 0.0f,
     -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
     0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
     0.5f, 0.5f, 0.5f,          0.0f, 1.0f, 0.0f,
     -0.5f, 0.5f, -0.5f,        0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f,
-    
-    -0.5f, 0.5f, -0.5f,        -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f,         -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,       -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f,        -1.0f, 0.0f, 0.0f,
+    -0.5f, 0.5f, 0.5f,         0.0f, 1.0f, 0.0f
+    ,
+
+    -0.5f, 0.5f, -0.5f,        -1.0f, 1.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,       -1.0f, -1.0f, -1.0f,
+    -0.5f, 0.5f, 0.5f,         -1.0f, 1.0f, 1.0f,
+    -0.5f, 0.5f, 0.5f,         -1.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,       -1.0f, -1.0f, -1.0f,
+    -0.5f, -0.5f, 0.5f,        -1.0f, -1.0f, 1.0f
+    ,
     
     -0.5f, -0.5f, -0.5f,       0.0f, -1.0f, 0.0f,
     0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
     -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
     -0.5f, -0.5f, 0.5f,        0.0f, -1.0f, 0.0f,
     0.5f, -0.5f, -0.5f,        0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f,
-    
-    0.5f, 0.5f, 0.5f,          0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f,         0.0f, 0.0f, 1.0f,
-    -0.5f, -0.5f, 0.5f,        0.0f, 0.0f, 1.0f,
+    0.5f, -0.5f, 0.5f,         0.0f, -1.0f, 0.0f
+    ,
+
+    0.5f, 0.5f, 0.5f,          1.0f, 1.0f, 1.0f,
+    -0.5f, 0.5f, 0.5f,         -1.0f, 1.0f, 1.0f,
+    0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f
+    ,
+    0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f,
+    -0.5f, 0.5f, 0.5f,         -1.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, 0.5f,        -1.0f, -1.0f, 1.0f
+    ,
     
     0.5f, -0.5f, -0.5f,        0.0f, 0.0f, -1.0f,
     -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
-    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
+    0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f
+    ,
     0.5f, 0.5f, -0.5f,         0.0f, 0.0f, -1.0f,
     -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
     -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
+    ,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    0.5f, -0.5f, -10.5f,        1.0f, -1.0f, -1.0f,
+//    0.5f, 0.5f, -10.5f,         1.0f, 1.0f, -1.0f,
+//    0.5f, -0.5f, 9.5f,         1.0f, -1.0f, 1.0f
+//    ,
+//    0.5f, -0.5f, 9.5f,         1.0f, -1.0f, 1.0f,
+//    0.5f, 0.5f, -10.5f,         1.0f, 1.0f, -1.0f,
+//    0.5f, 0.5f, 9.5f,          1.0f, 1.0f, 1.0f
+//    ,
+//    
+//    0.5f, 0.5f, -10.5f,         0.0f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, -10.5f,        0.0f, 1.0f, 0.0f,
+//    0.5f, 0.5f, 9.5f,          0.0f, 1.0f, 0.0f,
+//    0.5f, 0.5f, 9.5f,          0.0f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, -10.5f,        0.0f, 1.0f, 0.0f,
+//    -0.5f, 0.5f, 9.5f,         0.0f, 1.0f, 0.0f
+//    ,
+//    
+//    -0.5f, 0.5f, -10.5f,        -1.0f, 1.0f, -1.0f,
+//    -0.5f, -0.5f, -10.5f,       -1.0f, -1.0f, -1.0f,
+//    -0.5f, 0.5f, 9.5f,         -1.0f, 1.0f, 1.0f,
+//    -0.5f, 0.5f, 9.5f,         -1.0f, 1.0f, 1.0f,
+//    -0.5f, -0.5f, -10.5f,       -1.0f, -1.0f, -1.0f,
+//    -0.5f, -0.5f, 9.5f,        -1.0f, -1.0f, 1.0f
+//    ,
+//    
+//    -0.5f, -0.5f, -10.5f,       0.0f, -1.0f, 0.0f,
+//    0.5f, -0.5f, -10.5f,        0.0f, -1.0f, 0.0f,
+//    -0.5f, -0.5f, 9.5f,        0.0f, -1.0f, 0.0f,
+//    -0.5f, -0.5f, 9.5f,        0.0f, -1.0f, 0.0f,
+//    0.5f, -0.5f, -10.5f,        0.0f, -1.0f, 0.0f,
+//    0.5f, -0.5f, 9.5f,         0.0f, -1.0f, 0.0f
+//    ,
+//    
+//    0.5f, 0.5f, 9.5f,          1.0f, 1.0f, 1.0f,
+//    -0.5f, 0.5f, 9.5f,         -1.0f, 1.0f, 1.0f,
+//    0.5f, -0.5f, 9.5f,         1.0f, -1.0f, 1.0f
+//    ,
+//    0.5f, -0.5f, 9.5f,         1.0f, -1.0f, 1.0f,
+//    -0.5f, 0.5f, 9.5f,         -1.0f, 1.0f, 1.0f,
+//    -0.5f, -0.5f, 9.5f,        -1.0f, -1.0f, 1.0f
+//    ,
+//    
+//    0.5f, -0.5f, -10.5f,        0.0f, 0.0f, -1.0f,
+//    -0.5f, -0.5f, -10.5f,       0.0f, 0.0f, -1.0f,
+//    0.5f, 0.5f, -10.5f,         0.0f, 0.0f, -1.0f
+//    ,
+//    0.5f, 0.5f, -10.5f,         0.0f, 0.0f, -1.0f,
+//    -0.5f, -0.5f, -10.5f,       0.0f, 0.0f, -1.0f,
+//    -0.5f, 0.5f, -10.5f,        0.0f, 0.0f, -1.0f
+//    ,
+
+    0.5f, -0.5f, -2.5f,        1.0f, -1.0f, -1.0f,
+    0.5f, 0.5f, -2.5f,         1.0f, 1.0f, -1.0f,
+    0.5f, -0.5f, -1.5f,         1.0f, -1.0f, 1.0f
+    ,
+    0.5f, -0.5f, -1.5f,         1.0f, -1.0f, 1.0f,
+    0.5f, 0.5f, -2.5f,         1.0f, 1.0f, -1.0f,
+    0.5f, 0.5f, -1.5f,          1.0f, 1.0f, 1.0f
+    ,
+    
+    0.5f, 0.5f, -2.5f,         0.0f, 1.0f, 0.0f,
+    -0.5f, 0.5f, -2.5f,        0.0f, 1.0f, 0.0f,
+    0.5f, 0.5f, -1.5f,          0.0f, 1.0f, 0.0f,
+    0.5f, 0.5f, -1.5f,          0.0f, 1.0f, 0.0f,
+    -0.5f, 0.5f, -2.5f,        0.0f, 1.0f, 0.0f,
+    -0.5f, 0.5f, -1.5f,         0.0f, 1.0f, 0.0f
+    ,
+    
+    -0.5f, 0.5f, -2.5f,        -1.0f, 1.0f, -1.0f,
+    -0.5f, -0.5f, -2.5f,       -1.0f, -1.0f, -1.0f,
+    -0.5f, 0.5f, -1.5f,         -1.0f, 1.0f, 1.0f,
+    -0.5f, 0.5f, -1.5f,         -1.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, -2.5f,       -1.0f, -1.0f, -1.0f,
+    -0.5f, -0.5f, -1.5f,        -1.0f, -1.0f, 1.0f
+    ,
+    
+    -0.5f, -0.5f, -2.5f,       0.0f, -1.0f, 0.0f,
+    0.5f, -0.5f, -2.5f,        0.0f, -1.0f, 0.0f,
+    -0.5f, -0.5f, -1.5f,        0.0f, -1.0f, 0.0f,
+    -0.5f, -0.5f, -1.5f,        0.0f, -1.0f, 0.0f,
+    0.5f, -0.5f, -2.5f,        0.0f, -1.0f, 0.0f,
+    0.5f, -0.5f, -1.5f,         0.0f, -1.0f, 0.0f
+    ,
+    
+    0.5f, 0.5f, -1.5f,          1.0f, 1.0f, 1.0f,
+    -0.5f, 0.5f, -1.5f,         -1.0f, 1.0f, 1.0f,
+    0.5f, -0.5f, -1.5f,         1.0f, -1.0f, 1.0f
+    ,
+    0.5f, -0.5f, -1.5f,         1.0f, -1.0f, 1.0f,
+    -0.5f, 0.5f, -1.5f,         -1.0f, 1.0f, 1.0f,
+    -0.5f, -0.5f, -1.5f,        -1.0f, -1.0f, 1.0f
+    ,
+    
+    0.5f, -0.5f, -2.5f,        0.0f, 0.0f, -1.0f,
+    -0.5f, -0.5f, -2.5f,       0.0f, 0.0f, -1.0f,
+    0.5f, 0.5f, -2.5f,         0.0f, 0.0f, -1.0f
+    ,
+    0.5f, 0.5f, -2.5f,         0.0f, 0.0f, -1.0f,
+    -0.5f, -0.5f, -2.5f,       0.0f, 0.0f, -1.0f,
+    -0.5f, 0.5f, -2.5f,        0.0f, 0.0f, -1.0f
+
 };
+
+#endif
+#define NUMBER_TRIANGLE                             (NUMBER_SQUARE * 2)
+#define NUMBER_VERTEX                               (NUMBER_TRIANGLE * 3)
+
 
 @interface GameViewController () {
     GLuint _program;
     
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
-    float _rotation;
+    float _rotationCube;
+    float _rotationViewer;
+    float _rotationNormal;
     
     GLuint _vertexArray;
     GLuint _vertexBuffer;
@@ -90,6 +327,7 @@ GLfloat gCubeVertexData[216] =
 
 - (void)setupGL;
 - (void)tearDownGL;
+- (void)setupCMMotion;
 
 - (BOOL)loadShaders;
 - (BOOL)compileShader:(GLuint *)shader type:(GLenum)type file:(NSString *)file;
@@ -114,6 +352,7 @@ GLfloat gCubeVertexData[216] =
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
     
     [self setupGL];
+    [self setupCMMotion];
 }
 
 - (void)dealloc
@@ -189,35 +428,118 @@ GLfloat gCubeVertexData[216] =
     }
 }
 
+
+///////////////////// Test Sbinet for motion
+- (void)setupCMMotion
+{
+    MyCMMotionManager = [[CMMotionManager alloc] init];
+    
+    [MyCMMotionManager startDeviceMotionUpdates];
+
+}
+///////////////////// Test Sbinet for motion - end
+
+
+
 #pragma mark - GLKView and GLKViewController delegate methods
 
 - (void)update
 {
+    if (0) { // put 1 make rotations
+        //    _rotationCube = 0.45;
+        //    _rotationViewer = 0;
+        //    _rotationNormal = 0;
+    }
+    
+    
+    
+    
+    
+    ///////////////////// Test Sbinet for motion
+    CMAttitude *myAtt = MyCMMotionManager.deviceMotion.attitude;
+    CMRotationMatrix r = myAtt.rotationMatrix;
+    // test 1 - pas les bons axes
+//    GLKMatrix4 motionMatrix = GLKMatrix4Make(r.m11, r.m21, r.m31, 0.0f,
+//                                             r.m12, r.m22, r.m32, 0.0f,
+//                                             r.m13, r.m23, r.m33, 0.0f,
+//                                             0.0f,  0.0f,  -4.0f, 1.0f);
+    // test 2 -
+    // convert CMRotationMatrix to GLKMatrix4
+    GLKMatrix4 motionMatrix = GLKMatrix4Make(r.m11, r.m21, r.m31, 0.0f,
+                                r.m12, r.m22, r.m32, 0.0f,
+                                r.m13, r.m23, r.m33, 0.0f,
+                                0.0f,  0.0f,  0.0f, 1.0f);
+    motionMatrix = GLKMatrix4RotateX(motionMatrix, M_PI / 2);
+    
+    /////////////// test sbinet - end
+
+
+    
+    /////////////// projection
+    GLKMatrix4 modelViewMatrix;
     float aspect = fabs(self.view.bounds.size.width / self.view.bounds.size.height);
     GLKMatrix4 projectionMatrix = GLKMatrix4MakePerspective(GLKMathDegreesToRadians(65.0f), aspect, 0.1f, 100.0f);
+    // original code for red cube in GLKit    self.effect.transform.projectionMatrix = projectionMatrix;
+    /////////////// projection - end
     
-    self.effect.transform.projectionMatrix = projectionMatrix;
     
-    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -4.0f);
-    baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotation, 0.0f, 1.0f, 0.0f);
+    /////////////// Viewer matrix
+    GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 0.0f);
+    if(1) { // 1 means use orientation of iOS device
+        /////////////// use device orientation
+        baseModelViewMatrix = GLKMatrix4Multiply(motionMatrix, baseModelViewMatrix);
+        /////////////// use device orientation - end
+    } else {
+        /////////////// original rotation
+        baseModelViewMatrix = GLKMatrix4Rotate(baseModelViewMatrix, _rotationViewer, 0.2f, 1.0f, 0.0f);
+        /////////////// original rotation - end
+    }
+    /////////////// Viewer matrix - end
     
-    // Compute the model view matrix for the object rendered with GLKit
-    GLKMatrix4 modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
-    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
     
+    /////////////// Object Move is world space matrix
+//     Compute the model view matrix for the object rendered with GLKit
+//    modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
+//    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotationCube, 1.0f, 1.0f, 1.0f);
+//    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
     self.effect.transform.modelviewMatrix = modelViewMatrix;
     
     // Compute the model view matrix for the object rendered with ES2
-    modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 1.5f);
-    modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
+    if (SHOULD_MOVE_ALL_OBJECTS_AROUND_FIXED_POINT) {
+        modelViewMatrix = GLKMatrix4MakeTranslation(OBJECTS_CENTER_COORD);
+    }
+    else {
+        modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 0.0f);
+    }
+
+    if (SHOULD_TURN_ALL_OBJECTS_AROUND_FIXED_POINT) {
+        modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotationCube, 0.0f, 1.0f, 0.0f);
+    }
     modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
+    /////////////// Object Move is world space matrix - end
     
+
+if (0) {
+    /////////////// test for normals
+    GLKMatrix4 modelViewMatrixForNormal = GLKMatrix4MakeTranslation(0.0f, 0.0f, -2.0f);
+    modelViewMatrixForNormal = GLKMatrix4Rotate(modelViewMatrixForNormal, _rotationNormal, 0.0f, 1.0f, 0.0f);
+    modelViewMatrixForNormal = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrixForNormal);
+    // test only GLKMatrix4 modelViewMatrixIdentityTest = GLKMatrix4MakeTranslation(0.0f, 1.0f, 0.0f);
+    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrixForNormal), NULL);
+    /////////////// test for normals - end
+} else {
+    /////////////// original normals
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
+    /////////////// original normals - end
+}
+    
+
     
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
     
-    _rotation += self.timeSinceLastUpdate * 0.5f;
+    _rotationCube += self.timeSinceLastUpdate * 0.5f;
+    _rotationViewer += self.timeSinceLastUpdate * 0.5f;
+    _rotationNormal += self.timeSinceLastUpdate * 0.5f;
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -230,7 +552,7 @@ GLfloat gCubeVertexData[216] =
     // Render the object with GLKit
     [self.effect prepareToDraw];
     
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, NUMBER_VERTEX);
     
     // Render the object again with ES2
     glUseProgram(_program);
@@ -238,7 +560,7 @@ GLfloat gCubeVertexData[216] =
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
     glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix.m);
     
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, NUMBER_VERTEX);
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation

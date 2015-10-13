@@ -425,6 +425,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ES";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -436,6 +437,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "www.b4d.xyz.SebTest-openGL-FromScratch-GameTemplate-GameTechOpenGL-ES";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -511,6 +513,7 @@
 				96A1C4B51BC6D4EA0022270F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		96A1C4B61BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests" */ = {
 			isa = XCConfigurationList;
@@ -519,6 +522,7 @@
 				96A1C4B81BC6D4EA0022270F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		96A1C4B91BC6D4EA0022270F /* Build configuration list for PBXNativeTarget "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests" */ = {
 			isa = XCConfigurationList;
@@ -527,6 +531,7 @@
 				96A1C4BB1BC6D4EA0022270F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

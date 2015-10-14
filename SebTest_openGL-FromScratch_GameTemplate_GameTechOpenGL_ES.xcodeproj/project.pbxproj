@@ -17,6 +17,10 @@
 		96A1C4991BC6D4EA0022270F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C4971BC6D4EA0022270F /* LaunchScreen.storyboard */; };
 		96A1C4A41BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4A31BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m */; };
 		96A1C4AF1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */; };
+		96B8C6161BCD894F004B0187 /* item_powerup_fish.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6141BCD894F004B0187 /* item_powerup_fish.png */; settings = {ASSET_TAGS = (); }; };
+		96B8C6171BCD894F004B0187 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6151BCD894F004B0187 /* tile_floor.png */; settings = {ASSET_TAGS = (); }; };
+		96B8C6191BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */; settings = {ASSET_TAGS = (); }; };
+		96B8C61B1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,10 @@
 		96A1C4AA1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m; sourceTree = "<group>"; };
 		96A1C4B01BC6D4EA0022270F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96B8C6141BCD894F004B0187 /* item_powerup_fish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = item_powerup_fish.png; sourceTree = "<group>"; };
+		96B8C6151BCD894F004B0187 /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
+		96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Shader_VertexShader_WithTexture.glsl; path = Shaders/Shader_VertexShader_WithTexture.glsl; sourceTree = "<group>"; };
+		96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Shader_FragmentShader_WithTexture.glsl; path = Shaders/Shader_FragmentShader_WithTexture.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +93,8 @@
 		96A1C4791BC6D4E90022270F = {
 			isa = PBXGroup;
 			children = (
+				96B8C6141BCD894F004B0187 /* item_powerup_fish.png */,
+				96B8C6151BCD894F004B0187 /* tile_floor.png */,
 				96A1C4841BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */,
 				96A1C4A21BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests */,
 				96A1C4AD1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests */,
@@ -109,6 +119,8 @@
 				96A1C4891BC6D4EA0022270F /* AppDelegate.m */,
 				96A1C48B1BC6D4EA0022270F /* Shader.fsh */,
 				96A1C48D1BC6D4EA0022270F /* Shader.vsh */,
+				96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */,
+				96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */,
 				96A1C48F1BC6D4EA0022270F /* GameViewController.h */,
 				96A1C4901BC6D4EA0022270F /* GameViewController.m */,
 				96A1C4921BC6D4EA0022270F /* Main.storyboard */,
@@ -252,11 +264,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96B8C6171BCD894F004B0187 /* tile_floor.png in Resources */,
+				96B8C6191BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl in Resources */,
 				96A1C4941BC6D4EA0022270F /* Main.storyboard in Resources */,
 				96A1C48E1BC6D4EA0022270F /* Shader.vsh in Resources */,
 				96A1C4961BC6D4EA0022270F /* Assets.xcassets in Resources */,
 				96A1C4991BC6D4EA0022270F /* LaunchScreen.storyboard in Resources */,
 				96A1C48C1BC6D4EA0022270F /* Shader.fsh in Resources */,
+				96B8C61B1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl in Resources */,
+				96B8C6161BCD894F004B0187 /* item_powerup_fish.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

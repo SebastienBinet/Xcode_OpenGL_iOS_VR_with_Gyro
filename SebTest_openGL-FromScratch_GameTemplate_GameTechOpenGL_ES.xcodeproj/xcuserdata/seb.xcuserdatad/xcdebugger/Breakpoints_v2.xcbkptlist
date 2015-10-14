@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "466034252.015481"
+            timestampString = "466439914.494177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "542"
-            endingLineNumber = "542"
-            landmarkName = "-update"
+            startingLineNumber = "584"
+            endingLineNumber = "584"
+            landmarkName = "-tearDownGL"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "466034252.015481"
+            timestampString = "466439914.494177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "546"
-            endingLineNumber = "546"
-            landmarkName = "-glkView:drawInRect:"
+            startingLineNumber = "588"
+            endingLineNumber = "588"
+            landmarkName = "-tearDownGL"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,28 +42,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "466034252.015481"
+            timestampString = "466439914.494177"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "574"
+            endingLineNumber = "574"
+            landmarkName = "-compileShadersTexture"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
+            timestampString = "466439914.494177"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "532"
             endingLineNumber = "532"
-            landmarkName = "-update"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "466034252.015481"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "490"
-            endingLineNumber = "490"
-            landmarkName = "-update"
+            landmarkName = "-compileShaderTexture:withType:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

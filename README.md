@@ -1,4 +1,4 @@
-# OpenGL_on_iOS_with_Gyro__xCode
+# Xcode_OpenGL_on_iOS_with_Gyro
 
 In this experimentation, the user sees in VR on his iPhone.
 There are a cube and a skybox that rotates at current speed around the user.

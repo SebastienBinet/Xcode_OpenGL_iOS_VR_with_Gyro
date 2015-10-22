@@ -21,6 +21,7 @@
 		96B8C6171BCD894F004B0187 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6151BCD894F004B0187 /* tile_floor.png */; settings = {ASSET_TAGS = (); }; };
 		96B8C6191BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */; settings = {ASSET_TAGS = (); }; };
 		96B8C61B1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */; settings = {ASSET_TAGS = (); }; };
+		96E49F951BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c in Sources */ = {isa = PBXBuildFile; fileRef = 96E49F941BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,8 @@
 		96B8C6151BCD894F004B0187 /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
 		96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Shader_VertexShader_WithTexture.glsl; path = Shaders/Shader_VertexShader_WithTexture.glsl; sourceTree = "<group>"; };
 		96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Shader_FragmentShader_WithTexture.glsl; path = Shaders/Shader_FragmentShader_WithTexture.glsl; sourceTree = "<group>"; };
+		96E49F941BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Brudslojan_skybox_image_416x312_3_BytesPerPixel.c; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Brudslojan_skybox_image_416x312_3_BytesPerPixel.c"; sourceTree = "<group>"; };
+		96E49F961BD8391A000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Brudslojan_skybox_image_416x312_3_BytesPerPixel.h; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Brudslojan_skybox_image_416x312_3_BytesPerPixel.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,8 @@
 		96A1C4791BC6D4E90022270F = {
 			isa = PBXGroup;
 			children = (
+				96E49F961BD8391A000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.h */,
+				96E49F941BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c */,
 				96B8C6141BCD894F004B0187 /* item_powerup_fish.png */,
 				96B8C6151BCD894F004B0187 /* tile_floor.png */,
 				96A1C4841BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */,
@@ -298,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96A1C48A1BC6D4EA0022270F /* AppDelegate.m in Sources */,
+				96E49F951BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c in Sources */,
 				96A1C4911BC6D4EA0022270F /* GameViewController.m in Sources */,
 				96A1C4871BC6D4EA0022270F /* main.m in Sources */,
 			);
@@ -440,6 +446,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
 				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -452,6 +459,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
 				INFOPLIST_FILE = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

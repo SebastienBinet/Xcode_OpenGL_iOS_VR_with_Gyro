@@ -1,3 +1,3 @@
 dependencies: \
-  /Users/seb/GitHub/iOS_dev/SebTestOpenGL_FromScratch/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/main.m \
-  /Users/seb/GitHub/iOS_dev/SebTestOpenGL_FromScratch/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/AppDelegate.h
+  /Users/seb/GitHub/Xcode_iOS/Xcode_OpenGL_iOS_VR_with_Gyro/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/main.m \
+  /Users/seb/GitHub/Xcode_iOS/Xcode_OpenGL_iOS_VR_with_Gyro/SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/AppDelegate.h

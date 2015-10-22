@@ -1,6 +1,6 @@
 //
 //  GameViewController.m
-//  to_delete
+//  
 //
 //  Created by Sebastien Binet on 2015-10-08.
 //  Copyright © 2015 Sebastien Binet. All rights reserved.
@@ -14,21 +14,29 @@
 CMMotionManager *MyCMMotionManager;
 ///////////////////// Test Sbinet for motion - end
 
+///////////////////// Test Sbinet for skybox
+#include "Brudslojan_skybox_image_416x312_3_BytesPerPixel.h"
+///////////////////// Test Sbinet for skybox- end
+
+
 #define OBJECTS_CENTER_COORD                        0.0f, -1.0f, 4.0f
-#define SHOULD_TURN_ALL_OBJECTS_AROUND_FIXED_POINT  true
+#define SHOULD_TURN_ALL_OBJECTS_AROUND_FIXED_POINT  false
 #define SHOULD_MOVE_ALL_OBJECTS_AROUND_FIXED_POINT  false
 #define USE_SKY_BOX_INSTEAD_OF_2_SMALL_CUBES        true
-#define USE_TEXTURE                                 false
+#define _____ALWAYS_PUT_TO_false_BECAUSE_BROKEN_____USE_TEXTURE___                                 false
+#define ADD_CHECKERBOARD_TEXTURE     true
 
 
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+// next one is from Joey Adams in http://stackoverflow.com/questions/3553296/c-sizeof-single-struct-member
+#define member_size(type, member) sizeof(((type *)0)->member)
 
 // Uniform index.
 enum
 {
     UNIFORM_MODELVIEWPROJECTION_MATRIX,
-    UNIFORM_NORMAL_MATRIX,
+    // NORMALS ARE NOT USED IN THIS TEST VERSION -  UNIFORM_NORMAL_MATRIX,
     NUM_UNIFORMS
 };
 GLint uniforms[NUM_UNIFORMS];
@@ -37,89 +45,418 @@ GLint uniforms[NUM_UNIFORMS];
 enum
 {
     ATTRIB_VERTEX,
-    ATTRIB_NORMAL,
+    // NORMALS ARE NOT USED IN THIS TEST VERSION -  ATTRIB_NORMAL,
+    ATTRIB_TEXTURE,
+    ATTRIB_OBJECT_NUMBER,
     NUM_ATTRIBUTES
 };
 
-#if USE_SKY_BOX_INSTEAD_OF_2_SMALL_CUBES
-#define NUMBER_SQUARE                               1 + 12
-#define NUMBER_FLOAT                                (NUMBER_SQUARE * 36)
 
-GLfloat gCubeVertexData[NUMBER_FLOAT] =
+//GLfloat bigArrayForGeometryAndTexture[1];
+
+
+const int tileMultiplier = 1;
+const float maxUV = 1.0f * tileMultiplier;
+
+
+#if ADD_CHECKERBOARD_TEXTURE
+//#define NUMBER_SQUARES_IN_WORLD      (1 /* unfold skybox on a square*/     + 6 /*  6 side of skybox */     + 6 /*   6 sides of a cube */ )
+#define NUMBER_VERTICES_PER_TRIANGLE  3
+#define NUMBER_TRIANGLE_PER_SQUARE    2
+#define NUMBER_TRIANGLES_IN_WORLD     (                                                  \
+                                        (   1 /*  1 square  to show the unfold skybox*/  \
+                                          + 6 /*  6 squares of skybox */                 \
+                                          + 6 /*  6 squares of a cube */                 \
+                                        )                                                \
+                                        * NUMBER_TRIANGLE_PER_SQUARE                     \
+                                      )
+
+
+#define NUMBER_VERTICES_IN_WORLD      ( NUMBER_TRIANGLES_IN_WORLD   *   NUMBER_VERTICES_PER_TRIANGLE )
+
+
+#define NUMBER_FLOAT_PER_POS          3 // PosX, PosY, PosZ
+#define NUMBER_FLOAT_PER_NORMAL       3 // NormX, NormY, NormZ
+#define NUMBER_FLOAT_PER_UV           2 // U, V
+
+#define NUMBER_FLOAT_PER_VERTEX       ( NUMBER_FLOAT_PER_POS  +  NUMBER_FLOAT_PER_NORMAL  +  NUMBER_FLOAT_PER_UV )
+
+#define NUMBER_FLOAT_PER_TRIANGLE  ( NUMBER_VERTICES_PER_TRIANGLE  *  NUMBER_FLOAT_PER_VERTEX )
+//#define NUMBER_FLOATS_IN_WORLD       (NUMBER_OF_FLOAT_PER_TRIANGLE  *  NUMBER_TRIANGLE_PER_SQUARE  *  NUMBER_SQUARES_IN_WORLD)
+#define NUMBER_FLOATS_IN_WORLD        ( NUMBER_FLOAT_PER_TRIANGLE  *  NUMBER_TRIANGLES_IN_WORLD )
+
+
+
+int test[NUMBER_FLOATS_IN_WORLD];
+int test2[( NUMBER_FLOATS_IN_WORLD  *  NUMBER_TRIANGLES_IN_WORLD )];
+int test3[( NUMBER_FLOATS_IN_WORLD  *  NUMBER_TRIANGLES_IN_WORLD )];
+
+
+#define UV_VERTEX__1 0.00, 0.34
+#define UV_VERTEX__2 0.26, 0.34
+#define UV_VERTEX__3 0.49, 0.34
+#define UV_VERTEX__4 0.75, 0.34
+#define UV_VERTEX__5 1.00, 0.34
+#define UV_VERTEX__6 0.00, 0.66
+#define UV_VERTEX__7 0.26, 0.66
+#define UV_VERTEX__8 0.49, 0.66
+#define UV_VERTEX__9 0.75, 0.66
+#define UV_VERTEX_10 1.00, 0.66
+#define UV_VERTEX_11 0.26, 0.00
+#define UV_VERTEX_12 0.49, 0.00
+#define UV_VERTEX_13 0.26, 1.00
+#define UV_VERTEX_14 0.49, 1.00
+
+//const float SKY_BOX_SCALE = 10.0f;
+
+typedef struct {
+    float x;
+    float y;
+    float z;
+} XYZ_t;
+
+typedef struct {
+    float u;
+    float x;
+} UV_t;
+
+typedef struct {
+    XYZ_t vertexPos;
+    XYZ_t vertexNorm;
+    UV_t  vertexUvMapping;
+} vertexFullInfo_t;
+#define OFFSET_IN_BYTES_TO_ACCESS_VERTEX_POS  0
+#define OFFSET_IN_BYTES_TO_ACCESS_VERTEX_NORM ( member_size(vertexFullInfo_t,vertexPos) )
+#define OFFSET_IN_BYTES_TO_ACCESS_VERTEX_UV   ( member_size(vertexFullInfo_t,vertexPos) + member_size(vertexFullInfo_t,vertexNorm ) )
+
+
+typedef vertexFullInfo_t triangleFullInfo_t[NUMBER_VERTICES_PER_TRIANGLE];
+
+
+triangleFullInfo_t g_allWorldInfo[ NUMBER_TRIANGLES_IN_WORLD ] =
 {
     // Data layout for each line below is:
-    // positionX, positionY, positionZ,     normalX, normalY, normalZ,
+    // { positionX, positionY, positionZ },    { normalX, normalY, normalZ },       { U,    V }
+    
+    // Unrolled skybox image
+    {
+      { {  0.5f,       -0.4f,        -0.4f },        { 1.0f, -1.0f, -1.0f },      {  0.00,   maxUV } },
+      { {  0.5f,       -0.1f,        -0.4f },        { 1.0f,  1.0f, -1.0f },      {  0.00,   0.00 } },
+      { {  0.5f,       -0.4f,         0.4f },        { 1.0f, -1.0f,  1.0f },      {  maxUV,  maxUV } }
+    },
+    {
+      { {  0.5f,       -0.4f,         0.4f },        { 1.0f, -1.0f,  1.0f },      { maxUV,  maxUV } },
+      { {  0.5f,       -0.1f,        -0.4f },        { 1.0f,  1.0f, -1.0f },      {  0.00,   0.00 } },
+      { {  0.5f,       -0.1f,         0.4f },        { 1.0f,  1.0f,  1.0f },      { maxUV,   0.00 } }
+    },
+    
 
-    // 1/6 of skybox
-    -0.5f, -0.5f, -0.5f,        1.0f, -1.0f, -1.0f,
-    -0.5f, 0.5f, -0.5f,         1.0f, 1.0f, -1.0f,
-    -0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f
-    ,
-    -0.5f, -0.5f, 0.5f,         1.0f, -1.0f, 1.0f,
-    -0.5f, 0.5f, -0.5f,         1.0f, 1.0f, -1.0f,
-    -0.5f, 0.5f, 0.5f,          1.0f, 1.0f, 1.0f
-    ,
     
     
-    
-    
-    // small cube
-    0.5f -1, -0.5f - 1, -0.5f + 4.0f,        1.0f, -1.0f, -1.0f,
-    0.5f -1, 0.5f - 1, -0.5f + 4.0f,         1.0f, 1.0f, -1.0f,
-    0.5f -1, -0.5f - 1, 0.5f + 4.0f,         1.0f, -1.0f, 1.0f
-    ,
-    0.5f -1, -0.5f - 1, 0.5f + 4.0f,         1.0f, -1.0f, 1.0f,
-    0.5f -1, 0.5f - 1, -0.5f + 4.0f,         1.0f, 1.0f, -1.0f,
-    0.5f -1, 0.5f - 1, 0.5f + 4.0f,          1.0f, 1.0f, 1.0f
-    ,
-    
-    0.5f -1, 0.5f - 1, -0.5f + 4.0f,         0.0f, 1.0f, 0.0f,
-    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,        0.0f, 1.0f, 0.0f,
-    0.5f -1, 0.5f - 1, 0.5f + 4.0f,          0.0f, 1.0f, 0.0f,
-    0.5f -1, 0.5f - 1, 0.5f + 4.0f,          0.0f, 1.0f, 0.0f,
-    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,        0.0f, 1.0f, 0.0f,
-    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,         0.0f, 1.0f, 0.0f
-    ,
-    
-    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,     -1.0f, 1.0f, -1.0f,
-    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    -1.0f, -1.0f, -1.0f,
-    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
-    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
-    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    -1.0f, -1.0f, -1.0f,
-    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     -1.0f, -1.0f, 1.0f
-    ,
-    
-    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    0.0f, -1.0f, 0.0f,
-    0.5f -1, -0.5f - 1, -0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
-    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
-    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
-    0.5f -1, -0.5f - 1, -0.5f + 4.0f,     0.0f, -1.0f, 0.0f,
-    0.5f -1, -0.5f - 1, 0.5f + 4.0f,      0.0f, -1.0f, 0.0f
-    ,
-    
-    0.5f -1, 0.5f - 1, 0.5f + 4.0f,       1.0f, 1.0f, 1.0f,
-    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
-    0.5f -1, -0.5f - 1, 0.5f + 4.0f,      1.0f, -1.0f, 1.0f
-    ,
-    0.5f -1, -0.5f - 1, 0.5f + 4.0f,      1.0f, -1.0f, 1.0f,
-    -0.5f -1, 0.5f - 1, 0.5f + 4.0f,      -1.0f, 1.0f, 1.0f,
-    -0.5f -1, -0.5f - 1, 0.5f + 4.0f,     -1.0f, -1.0f, 1.0f
-    ,
-    
-    0.5f -1, -0.5f - 1, -0.5f + 4.0f,     0.0f, 0.0f, -1.0f,
-    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    0.0f, 0.0f, -1.0f,
-    0.5f -1, 0.5f - 1, -0.5f + 4.0f,      0.0f, 0.0f, -1.0f
-    ,
-    0.5f -1, 0.5f - 1, -0.5f + 4.0f,      0.0f, 0.0f, -1.0f,
-    -0.5f -1, -0.5f - 1, -0.5f + 4.0f,    0.0f, 0.0f, -1.0f,
-    -0.5f -1, 0.5f - 1, -0.5f + 4.0f,     0.0f, 0.0f, -1.0f
 
+    //           11-----12                        0.00
+    //        -x+y-z  -x+y+z
+    //           |   y   |
+    //           |       |
+    //   1-------2-------3-------4-------5        0.33
+    //-x+y-z  +x+y-z  +x+y+z  -x+y+z  -x+y-z
+    //   |  -z   |   x   |   z   |  -x   |
+    //   |       |       |       |       |
+    //   6-------7-------8-------9------10        0.66
+    //-x-y-z  +x-y-z  +x-y+z  -x-y+z  -x-y-z
+    //           |  -y   |
+    //           |       |
+    //           13-----14                        1.00
+    //        -x-y-z  -x-y+z
+    //
+    //                                          \ U
+    //   0       0       0       0       1     V
+    //   .       .       .       .       .
+    //   0       2       5       7       0
+    //   0       5       0       5       0
+
+    //
+    // SKYBOX
+    //             ^
+    //             |
+    //            +y
+    //
+    //   <- -z    +x     +z ->
+    //
+    
+    // x
+    {
+    /* 7*/      { { 5.0f,     -5.0f,         -5.0f},       { 1.0f, -1.0f, -1.0f},      { UV_VERTEX__7} },
+    /* 2*/      { { 5.0f,      5.0f,         -5.0f},       { 1.0f,  1.0f, -1.0f},      { UV_VERTEX__2} },
+    /* 8*/      { { 5.0f,     -5.0f,          5.0f},       { 1.0f, -1.0f,  1.0f},      { UV_VERTEX__8} }
+    },
+    {
+    /* 8*/      { { 5.0f,     -5.0f,          5.0f},       { 1.0f, -1.0f,  1.0f},      { UV_VERTEX__8} },
+    /* 2*/      { { 5.0f,      5.0f,         -5.0f},       { 1.0f,  1.0f, -1.0f},      { UV_VERTEX__2} },
+    /* 3*/      { { 5.0f,      5.0f,          5.0f},       { 1.0f,  1.0f,  1.0f},      { UV_VERTEX__3} }
+    },
+    
+    // y
+    {
+    /* 2*/      { { 5.0f,      5.0f,         -5.0f},       { 0.0f,  1.0f,  0.0f},      { UV_VERTEX__2} },
+    /*11*/      { {-5.0f,      5.0f,         -5.0f},       { 0.0f,  1.0f,  0.0f},      { UV_VERTEX_11} },
+    /* 3*/      { { 5.0f,      5.0f,          5.0f},       { 0.0f,  1.0f,  0.0f},      { UV_VERTEX__3} }
+    },
+    {
+    /* 3*/      { { 5.0f,      5.0f,          5.0f},       { 0.0f,  1.0f,  0.0f},      { UV_VERTEX__3} },
+    /*11*/      { {-5.0f,      5.0f,         -5.0f},       { 0.0f,  1.0f,  0.0f},      { UV_VERTEX_11} },
+    /*12*/      { {-5.0f,      5.0f,          5.0f},       { 0.0f,  1.0f,  0.0f},      { UV_VERTEX_12} }
+    },
+    
+    // -x
+    {
+    /* 5*/      { {-5.0f,      5.0f,         -5.0f},       {-1.0f,  1.0f, -1.0f},      { UV_VERTEX__5} },
+    /*10*/      { {-5.0f,     -5.0f,         -5.0f},       {-1.0f, -1.0f, -1.0f},      { UV_VERTEX_10} },
+    /* 4*/      { {-5.0f,      5.0f,          5.0f},       {-1.0f,  1.0f,  1.0f},      { UV_VERTEX__4} }
+    },
+    {
+    /* 4*/      { {-5.0f,      5.0f,          5.0f},       {-1.0f,  1.0f,  1.0f},      { UV_VERTEX__4} },
+    /*10*/      { {-5.0f,     -5.0f,         -5.0f},       {-1.0f, -1.0f, -1.0f},      { UV_VERTEX_10} },
+    /* 9*/      { {-5.0f,     -5.0f,          5.0f},       {-1.0f, -1.0f,  1.0f},      { UV_VERTEX__9} }
+    },
+    
+    // -y
+    {
+    /*13*/      { {-5.0f,     -5.0f,         -5.0f},       { 0.0f, -1.0f,  0.0f},      { UV_VERTEX_13} },
+    /* 7*/      { { 5.0f,     -5.0f,         -5.0f},       { 0.0f, -1.0f,  0.0f},      { UV_VERTEX__7} },
+    /*14*/      { {-5.0f,     -5.0f,          5.0f},       { 0.0f, -1.0f,  0.0f},      { UV_VERTEX_14} }
+    },
+    {
+    /*14*/      { {-5.0f,     -5.0f,          5.0f},       { 0.0f, -1.0f,  0.0f},      { UV_VERTEX_14} },
+    /* 7*/      { { 5.0f,     -5.0f,         -5.0f},       { 0.0f, -1.0f,  0.0f},      { UV_VERTEX__7} },
+    /* 8*/      { { 5.0f,     -5.0f,          5.0f},       { 0.0f, -1.0f,  0.0f},      { UV_VERTEX__8} }
+    },
+
+    // z
+    {
+    /* 3*/      { { 5.0f,      5.0f,          5.0f},       { 1.0f,  1.0f,  1.0f},      { UV_VERTEX__3} },
+    /* 4*/      { {-5.0f,      5.0f,          5.0f},       {-1.0f,  1.0f,  1.0f},      { UV_VERTEX__4} },
+    /* 8*/      { { 5.0f,     -5.0f,          5.0f},       { 1.0f, -1.0f,  1.0f},      { UV_VERTEX__8} }
+    },
+    {
+    /* 8*/      { { 5.0f,     -5.0f,          5.0f},       { 1.0f, -1.0f,  1.0f},      { UV_VERTEX__8} },
+    /* 4*/      { {-5.0f,      5.0f,          5.0f},       {-1.0f,  1.0f,  1.0f},      { UV_VERTEX__4} },
+    /* 9*/      { {-5.0f,     -5.0f,          5.0f},       {-1.0f, -1.0f,  1.0f},      { UV_VERTEX__9} }
+    },
+    
+    // -z
+    {
+    /* 7*/      { { 5.0f,     -5.0f,         -5.0f},       { 0.0f,  0.0f, -1.0f},      { UV_VERTEX__7} },
+    /* 6*/      { {-5.0f,     -5.0f,         -5.0f},       { 0.0f,  0.0f, -1.0f},      { UV_VERTEX__6} },
+    /* 2*/      { { 5.0f,      5.0f,         -5.0f},       { 0.0f,  0.0f, -1.0f},      { UV_VERTEX__2} }
+    },
+    {
+    /* 2*/      { { 5.0f,      5.0f,         -5.0f},       { 0.0f,  0.0f, -1.0f},      { UV_VERTEX__2} },
+    /* 6*/      { {-5.0f,     -5.0f,         -5.0f},       { 0.0f,  0.0f, -1.0f},      { UV_VERTEX__6} },
+    /* 1*/      { {-5.0f,      5.0f,         -5.0f},       { 0.0f,  0.0f, -1.0f},      { UV_VERTEX__1} }
+    }
 };
+
+// TO DELETE
+//const XYZ_t verticesInfoUnitBox[] = {
+//    //                  x,       y,       z
+//    /*vertex [ 1]*/   { 0.5f,   -0.5f,    0.5f},
+//    /*vertex [ 2]*/   { 0.5f,    0.5f,    0.5f},
+//    /*vertex [ 3]*/   {-0.5f,    0.5f,    0.5f},
+//    /*vertex [ 4]*/   {-0.5f,   -0.5f,    0.5f},
+//    /*vertex [ 5]*/   { 0.5f,   -0.5f,    0.5f},
+//    /*vertex [ 6]*/   { 0.5f,   -0.5f,   -0.5f},
+//    /*vertex [ 7]*/   { 0.5f,    0.5f,   -0.5f},
+//    /*vertex [ 8]*/   {-0.5f,    0.5f,   -0.5f},
+//    /*vertex [ 9]*/   {-0.5f,   -0.5f,   -0.5f},
+//    /*vertex [10]*/   { 0.5f,   -0.5f,   -0.5f},
+//    /*vertex [11]*/   { 0.5f,   -0.5f,    0.5f},
+//    /*vertex [12]*/   {-0.5f,   -0.5f,    0.5f},
+//    /*vertex [13]*/   { 0.5f,   -0.5f,   -0.5f},
+//    /*vertex [14]*/   {-0.5f,   -0.5f,   -0.5f}
+//};
+//
+//const XYZ_t pos_SKYBOX_____[] = {
+//    /*vertex [ 1]*/   { SKY_BOX_SCALE  *  SKY_BOX_SCALE,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 1].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 1].z},
+//    /*vertex [ 2]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 2].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 2].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 2].z},
+//    /*vertex [ 3]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 3].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 3].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 3].z},
+//    /*vertex [ 4]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 4].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 4].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 4].z},
+//    /*vertex [ 5]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 5].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 5].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 5].z},
+//    /*vertex [ 6]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 6].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 6].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 6].z},
+//    /*vertex [ 7]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 7].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 7].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 7].z},
+//    /*vertex [ 8]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 8].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 8].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 8].z},
+//    /*vertex [ 9]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 9].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 9].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 9].z},
+//    /*vertex [10]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[10].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[10].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[10].z},
+//    /*vertex [11]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[11].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[11].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[11].z},
+//    /*vertex [12]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[12].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[12].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[12].z},
+//    /*vertex [13]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[13].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[13].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[13].z},
+//    /*vertex [14]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[14].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[14].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[14].z}
+//};
+//
+//#define POS_XYZ_VERTEX__1     SKY_BOX_SCALE  *  verticesInfoUnitBox[1].x,    SKY_BOX_SCALE  *  verticesInfoUnitBox[1].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[1].z
+
+
+
+// TO DELETE
+//GLfloat gCubeVertexData[ NUMBER_FLOATS_IN_WORLD ] =
+//{
+//    // Data layout for each line below is:
+//    // positionX, positionY, positionZ,     normalX, normalY, normalZ,        U,    V
+//
+//    // Unrolled skybox image
+//    -0.5f,       -0.0f,        -0.0f,        1.0f, -1.0f, -1.0f,       0.00,   0.00,
+//    -0.5f,        0.3f,        -0.0f,        1.0f,  1.0f, -1.0f,      maxUV,   0.00,
+//    -0.5f,       -0.0f,         0.3f,        1.0f, -1.0f,  1.0f,       0.00,  maxUV,
+//    
+//    -0.5f,       -0.0f,         0.3f,        1.0f, -1.0f,  1.0f,       0.00,  maxUV,
+//    -0.5f,        0.3f,        -0.0f,        1.0f,  1.0f, -1.0f,      maxUV,   0.00,
+//    -0.5f,        0.3f,         0.3f,        1.0f,  1.0f,  1.0f,      maxUV,  maxUV,
+//
+//
+//    
+//    
+//    
+//    
+//    
+//    
+//    
+//    
+//    //           11-----12                        1.00
+//    //         x-y z  -x-y z
+//    //           |   z   |
+//    //           |       |
+//    //   1-------2-------3-------4-------5        0.66
+//    // x-y z   x y z  -x y z  -x-y z   x-y z
+//    //   |   x   |   y   |  -x   |  -y   |
+//    //   |       |       |       |       |
+//    //   6-------7-------8-------9------10        0.33
+//    // x-y-z   x y-z  -x y-z  -x-y-z   x-y-z
+//    //           |  -z   |
+//    //           |       |
+//    //           13-----14                        0.00
+//    //         x-y-z  -x-y-z
+//    //
+//    //                                          \ U
+//    //   0       0       0       0       1     V
+//    //   .       .       .       .       .
+//    //   0       2       5       7       0
+//    //   0       5       0       5       0
+//    
+//    //
+//    // SKYBOX
+//    //
+//    
+//    // x
+//    /* 6*/      5.0f,     -5.0f,        -5.0f,        1.0f, -1.0f, -1.0f,      UV_VERTEX__6,
+//    /* 7*/      5.0f,      5.0f,        -5.0f,        1.0f,  1.0f, -1.0f,      UV_VERTEX__7,
+//    /* 1*/      5.0f,     -5.0f,         5.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX__1,
+//    /* 1*/      5.0f,     -5.0f,         5.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX__1,
+//    /* 7*/      5.0f,      5.0f,        -5.0f,        1.0f,  1.0f, -1.0f,      UV_VERTEX__7,
+//    /* 2*/      5.0f,      5.0f,         5.0f,        1.0f,  1.0f,  1.0f,      UV_VERTEX__2,
+//    
+//    // y
+//    /* 7*/      5.0f,      5.0f,        -5.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__7,
+//    /* 8*/     -5.0f,      5.0f,        -5.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__8,
+//    /* 2*/      5.0f,      5.0f,         5.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__2,
+//    /* 2*/      5.0f,      5.0f,         5.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__2,
+//    /* 8*/     -5.0f,      5.0f,        -5.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__8,
+//    /* 3*/     -5.0f,      5.0f,         5.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__3,
+//    
+//    // -x
+//    /* 8*/     -5.0f,      5.0f,        -5.0f,       -1.0f,  1.0f, -1.0f,      0.00,  0.00,
+//    /* 9*/     -5.0f,     -5.0f,        -5.0f,       -1.0f, -1.0f, -1.0f,      0.00,  0.00,
+//    /* 3*/     -5.0f,      5.0f,         5.0f,       -1.0f,  1.0f,  1.0f,      0.00,  0.00,
+//    /* 3*/     -5.0f,      5.0f,         5.0f,       -1.0f,  1.0f,  1.0f,      0.00,  0.00,
+//    /* 9*/     -5.0f,     -5.0f,        -5.0f,       -1.0f, -1.0f, -1.0f,      0.00,  0.00,
+//    /* 4*/     -5.0f,     -5.0f,         5.0f,       -1.0f, -1.0f,  1.0f,      0.00,  0.00,
+//    
+//    // -y
+//    /*  */     -5.0f,     -5.0f,        -5.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */      5.0f,     -5.0f,        -5.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */     -5.0f,     -5.0f,         5.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */     -5.0f,     -5.0f,         5.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */      5.0f,     -5.0f,        -5.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */      5.0f,     -5.0f,         5.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    
+//    // z
+//    /* 2*/      5.0f,      5.0f,         5.0f,        1.0f,  1.0f,  1.0f,      UV_VERTEX__2,
+//    /* 3*/     -5.0f,      5.0f,         5.0f,       -1.0f,  1.0f,  1.0f,      UV_VERTEX__3,
+//    /*11*/      5.0f,     -5.0f,         5.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX_11,
+//    /*11*/      5.0f,     -5.0f,         5.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX_11,
+//    /* 3*/     -5.0f,      5.0f,         5.0f,       -1.0f,  1.0f,  1.0f,      UV_VERTEX__3,
+//    /*12*/     -5.0f,     -5.0f,         5.0f,       -1.0f, -1.0f,  1.0f,      UV_VERTEX_12,
+//    
+//    // -z
+//    /*13*/      5.0f,     -5.0f,        -5.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX_13,
+//    /*14*/     -5.0f,     -5.0f,        -5.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX_14,
+//    /* 7*/      5.0f,      5.0f,        -5.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX__7,
+//    /* 7*/      5.0f,      5.0f,        -5.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX__7,
+//    /*14*/     -5.0f,     -5.0f,        -5.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX_14,
+//    /* 8*/     -5.0f,      5.0f,        -5.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX__8,
+//    
+//    
+//    
+//    
+//    
+//    
+//    //
+//    // SMALL CUBE
+//    //
+//    
+//    // x
+//    /* 6*/  0.5f - 1, -0.5f - 1,        -5.0f,        1.0f, -1.0f, -1.0f,      UV_VERTEX__6,
+//    /* 7*/  0.5f - 1,  0.5f - 1,        -5.0f,        1.0f,  1.0f, -1.0f,      UV_VERTEX__7,
+//    /* 1*/  0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX__1,
+//    /* 1*/  0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX__1,
+//    /* 7*/  0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        1.0f,  1.0f, -1.0f,      UV_VERTEX__7,
+//    /* 2*/  0.5f - 1,  0.5f - 1,  0.5f + 4.0f,        1.0f,  1.0f,  1.0f,      UV_VERTEX__2,
+//    
+//    // y
+//    /* 7*/  0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__7,
+//    /* 8*/ -0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__8,
+//    /* 2*/  0.5f - 1,  0.5f - 1,  0.5f + 4.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__2,
+//    /* 2*/  0.5f - 1,  0.5f - 1,  0.5f + 4.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__2,
+//    /* 8*/ -0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__8,
+//    /* 3*/ -0.5f - 1,  0.5f - 1,  0.5f + 4.0f,        0.0f,  1.0f,  0.0f,      UV_VERTEX__3,
+//    
+//    // -x
+//    /*  */ -0.5f - 1,  0.5f - 1, -0.5f + 4.0f,       -1.0f,  1.0f, -1.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1, -0.5f - 1, -0.5f + 4.0f,       -1.0f, -1.0f, -1.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1,  0.5f - 1,  0.5f + 4.0f,       -1.0f,  1.0f,  1.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1,  0.5f - 1,  0.5f + 4.0f,       -1.0f,  1.0f,  1.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1, -0.5f - 1, -0.5f + 4.0f,       -1.0f, -1.0f, -1.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1, -0.5f - 1,  0.5f + 4.0f,       -1.0f, -1.0f,  1.0f,      0.00,  0.00,
+//    
+//    // -y
+//    /*  */ -0.5f - 1, -0.5f - 1, -0.5f + 4.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */  0.5f - 1, -0.5f - 1, -0.5f + 4.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */ -0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */  0.5f - 1, -0.5f - 1, -0.5f + 4.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    /*  */  0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        0.0f, -1.0f,  0.0f,      0.00,  0.00,
+//    
+//    // z
+//    /* 2*/  0.5f - 1,  0.5f - 1,  0.5f + 4.0f,        1.0f,  1.0f,  1.0f,      UV_VERTEX__2,
+//    /* 3*/ -0.5f - 1,  0.5f - 1,  0.5f + 4.0f,       -1.0f,  1.0f,  1.0f,      UV_VERTEX__3,
+//    /*11*/  0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX_11,
+//    /*11*/  0.5f - 1, -0.5f - 1,  0.5f + 4.0f,        1.0f, -1.0f,  1.0f,      UV_VERTEX_11,
+//    /* 3*/ -0.5f - 1,  0.5f - 1,  0.5f + 4.0f,       -1.0f,  1.0f,  1.0f,      UV_VERTEX__3,
+//    /*12*/ -0.5f - 1, -0.5f - 1,  0.5f + 4.0f,       -1.0f, -1.0f,  1.0f,      UV_VERTEX_12,
+//    
+//    // -z
+//    /*13*/  0.5f - 1, -0.5f - 1, -0.5f + 4.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX_13,
+//    /*14*/ -0.5f - 1, -0.5f - 1, -0.5f + 4.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX_14,
+//    /* 7*/  0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX__7,
+//    /* 7*/  0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX__7,
+//    /*14*/ -0.5f - 1, -0.5f - 1, -0.5f + 4.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX_14,
+//    /* 8*/ -0.5f - 1,  0.5f - 1, -0.5f + 4.0f,        0.0f,  0.0f, -1.0f,      UV_VERTEX__8
+//
+//};
 
 #else
 
-#define NUMBER_SQUARE                               12
-#define NUMBER_FLOAT                                (NUMBER_SQUARE * 36)
+#define NUMBER_SQUARES_IN_WORLD                     12
+#define NUMBER_FLOAT                                (NUMBER_SQUARES_IN_WORLD * 36)
 
 GLfloat gCubeVertexData[NUMBER_FLOAT] =
 {
@@ -175,26 +512,6 @@ GLfloat gCubeVertexData[NUMBER_FLOAT] =
     -0.5f, -0.5f, -0.5f,       0.0f, 0.0f, -1.0f,
     -0.5f, 0.5f, -0.5f,        0.0f, 0.0f, -1.0f
     ,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -306,9 +623,10 @@ GLfloat gCubeVertexData[NUMBER_FLOAT] =
 };
 
 #endif
-#define NUMBER_TRIANGLE                             (NUMBER_SQUARE * 2)
-#define NUMBER_VERTEX                               (NUMBER_TRIANGLE * 3)
+#define NUMBER_TRIANGLES                            (NUMBER_SQUARES_IN_WORLD * 2)
+#define NUMBER_VERTICES                             (NUMBER_TRIANGLES * 3)
 
+#if 0 // TODO: DELETE THIS SECTION
 // For texture - begin. ref.:http://www.raywenderlich.com/4404/opengl-es-2-0-for-iphone-tutorial-
 // Add texture coordinates to Vertex structure as follows
 struct Vertex{
@@ -330,13 +648,13 @@ const struct Vertex Vertices[] = {
 };
 
 // For texture - end
-
+#endif
 
 @interface GameViewController () {
     GLuint _program;
     
     GLKMatrix4 _modelViewProjectionMatrix;
-    GLKMatrix3 _normalMatrix;
+//    GLKMatrix3 _normalMatrix;
     float _rotationCube;
     float _rotationViewer;
     float _rotationNormal;
@@ -357,6 +675,8 @@ const struct Vertex Vertices[] = {
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) GLKBaseEffect *effect;
 
+#if !_____ALWAYS_PUT_TO_false_BECAUSE_BROKEN_____USE_TEXTUR
+
 - (void)setupGL_Generated;
 - (void)tearDownGL;
 - (void)setupCMMotion;
@@ -366,10 +686,21 @@ const struct Vertex Vertices[] = {
 - (BOOL)linkProgram:(GLuint)prog;
 - (BOOL)validateProgram:(GLuint)prog;
 
+// TO DELETE
+//- (void) initializeGeometryAndTexture;
+
+#else
+
+#if 0 // TODO: DELETE THIS SECTION
+{
 // For texture - begin
 - (GLuint)setupTexture:(NSString *)fileName;
 - (GLuint)compileShaderTexture:(NSString*)shaderName withType:(GLenum)shaderType;
 - (void)compileShadersTexture;
+}
+#endif
+
+#endif
 
 // For texture - end
 
@@ -381,6 +712,18 @@ const struct Vertex Vertices[] = {
 {
     [super viewDidLoad];
     NSLog(@"viewDidLoad called");
+    NSLog(@"constant NUMBER_TRIANGLES_IN_WORLD : %d\n", NUMBER_TRIANGLES_IN_WORLD);
+    NSLog(@"constant NUMBER_VERTICES_IN_WORLD  : %d\n", NUMBER_VERTICES_IN_WORLD);
+    NSLog(@"constant NUMBER_FLOAT_PER_VERTEX   : %d\n", NUMBER_FLOAT_PER_VERTEX);
+    NSLog(@"constant NUMBER_FLOAT_PER_TRIANGLE : %d\n", NUMBER_FLOAT_PER_TRIANGLE);
+    NSLog(@"constant NUMBER_FLOATS_IN_WORLD    : %d\n", NUMBER_FLOATS_IN_WORLD);
+    NSLog(@"constant OFFSET_IN_BYTES_TO_ACCESS_VERTEX_POS  : %d\n", OFFSET_IN_BYTES_TO_ACCESS_VERTEX_POS);
+    NSLog(@"constant OFFSET_IN_BYTES_TO_ACCESS_VERTEX_NORM : %d\n", OFFSET_IN_BYTES_TO_ACCESS_VERTEX_NORM);
+    NSLog(@"constant OFFSET_IN_BYTES_TO_ACCESS_VERTEX_UV   : %d\n", OFFSET_IN_BYTES_TO_ACCESS_VERTEX_UV);
+    NSLog(@"sizeof(XYZ_t)              : %d\n", sizeof(XYZ_t));
+    NSLog(@"sizeof(vertexFullInfo_t)   : %d\n", sizeof(vertexFullInfo_t));
+    NSLog(@"sizeof(triangleFullInfo_t) : %d\n", sizeof(triangleFullInfo_t));
+    
     
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 
@@ -428,7 +771,7 @@ const struct Vertex Vertices[] = {
     return YES;
 }
 
-#if !USE_TEXTURE
+#if !_____ALWAYS_PUT_TO_false_BECAUSE_BROKEN_____USE_TEXTURE___
 - (void)setupGL_Generated
 {
     [EAGLContext setCurrentContext:self.context];
@@ -446,14 +789,76 @@ const struct Vertex Vertices[] = {
     
     glGenBuffers(1, &_vertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
+    // TO DELETE    glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_allWorldInfo), g_allWorldInfo, GL_STATIC_DRAW);
     
+#if ADD_CHECKERBOARD_TEXTURE
     glEnableVertexAttribArray(GLKVertexAttribPosition);
-    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
-    glEnableVertexAttribArray(GLKVertexAttribNormal);
-    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
+    // TO DELETE  glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 4 /*bytes/float*/ * (3+3+2) /*xyzxyzUV*/, BUFFER_OFFSET(0));
+    glVertexAttribPointer(GLKVertexAttribPosition, NUMBER_FLOAT_PER_POS, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * NUMBER_FLOAT_PER_VERTEX /*xyzxyzUV*/, BUFFER_OFFSET(OFFSET_IN_BYTES_TO_ACCESS_VERTEX_POS));
+    // NORMALS ARE NOT USED IN THIS TEST VERSION -  glEnableVertexAttribArray(GLKVertexAttribNormal);
+    // NORMALS ARE NOT USED IN THIS TEST VERSION -  glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 4 /*bytes/float*/ * (3+3+2) /*xyzxyzUV*/, BUFFER_OFFSET(4 /*bytes/float*/ * (3) /*after xyz*/));
     
-    glBindVertexArrayOES(0);
+    // MOVED LOWER IN CODE    glBindVertexArrayOES(0);
+    
+    
+
+    // based on https://open.gl/textures
+    GLuint mytex;
+    glGenTextures(ATTRIB_TEXTURE, &mytex);
+    glBindTexture(GL_TEXTURE_2D, mytex);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    
+    
+    // COULD ALSO WORK -        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // COULD ALSO WORK -        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // COULD ALSO WORK -        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    
+    
+    // COULD ALSO WORK -        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // Black/white checkerboard
+//    float pixels[] = {
+//        1.0f, 0.0f, 0.0f,   1.0f, 1.0f, 0.0f,
+//        1.0f, 1.0f, 1.0f,   0.0f, 0.0f, 1.0f
+//    };
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
+
+    
+    
+//    float pixels4x4[] = {
+//        0.2f, 0.2f, 0.0f,   0.2f, 0.4f, 0.0f,   0.2f, 0.6f, 0.0f,   0.2f, 0.6f, 0.0f,
+//        0.4f, 0.2f, 1.0f,   0.4f, 0.4f, 0.0f,   0.4f, 0.6f, 0.0f,   0.4f, 0.6f, 0.0f,
+//        0.6f, 0.2f, 0.0f,   0.6f, 0.4f, 0.0f,   0.6f, 0.6f, 0.0f,   0.6f, 0.6f, 0.0f,
+//        0.8f, 0.2f, 0.0f,   0.8f, 0.4f, 0.0f,   0.8f, 0.6f, 0.0f,   0.8f, 0.6f, 0.0f
+//    };
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_FLOAT, pixels4x4);
+
+    
+    
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Brudslojan_skybox_image_416x312_3_BytesPerPixel.width, Brudslojan_skybox_image_416x312_3_BytesPerPixel.height, 0, GL_RGB, GL_UNSIGNED_BYTE, Brudslojan_skybox_image_416x312_3_BytesPerPixel.pixel_data);
+
+    
+    // This line was defective. Replaced by next one -  glEnableVertexAttribArray(GLKVertexAttribTexCoord0);
+    glEnableVertexAttribArray(ATTRIB_TEXTURE);
+
+    // This line was defective. Replaced by next one -  glVertexAttribPointer(GLKVertexAttribTexCoord0, 2, GL_FLOAT, GL_FALSE, 4 /*bytes/float*/ * (3+3+2) /*xyzxyzUV*/, BUFFER_OFFSET(4 /*bytes/float*/ * (3+3) /*after xyzxyz*/));
+    // TO DELETE glVertexAttribPointer(ATTRIB_TEXTURE, 2, GL_FLOAT, GL_FALSE, 4 /*bytes/float*/ * (3+3+2) /*xyzxyzUV*/, BUFFER_OFFSET(4 /*bytes/float*/ * (3+3) /*after xyzxyz*/));
+    glVertexAttribPointer(ATTRIB_TEXTURE, NUMBER_FLOAT_PER_UV, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * NUMBER_FLOAT_PER_VERTEX /*xyzxyzUV*/, BUFFER_OFFSET(OFFSET_IN_BYTES_TO_ACCESS_VERTEX_UV /*after xyzxyz*/));
+
+    // This line was defective. Replaced by next one -  glBindAttribLocation(_program, GLKVertexAttribTexCoord0, "texCoordIn");
+    glBindAttribLocation(_program, ATTRIB_TEXTURE, "texCoordIn");
+    
+    glBindAttribLocation(_program, ATTRIB_OBJECT_NUMBER, "objectNumber");
+    
+#endif
     
 
 }
@@ -612,7 +1017,7 @@ const struct Vertex Vertices[] = {
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
-#if !USE_TEXTURE
+#if !_____ALWAYS_PUT_TO_false_BECAUSE_BROKEN_____USE_TEXTURE___
 - (void)update
 {
     if (0) { // put 1 make rotations
@@ -655,7 +1060,8 @@ const struct Vertex Vertices[] = {
     
     /////////////// Viewer matrix
     GLKMatrix4 baseModelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 0.0f);
-    if(1) { // 1 means use orientation of iOS device
+    int yyyyy=1;
+    if(yyyyy) { // 1 means use orientation of iOS device
         /////////////// use device orientation
         baseModelViewMatrix = GLKMatrix4Multiply(motionMatrix, baseModelViewMatrix);
         /////////////// use device orientation - end
@@ -695,11 +1101,11 @@ if (0) {
     modelViewMatrixForNormal = GLKMatrix4Rotate(modelViewMatrixForNormal, _rotationNormal, 0.0f, 1.0f, 0.0f);
     modelViewMatrixForNormal = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrixForNormal);
     // test only GLKMatrix4 modelViewMatrixIdentityTest = GLKMatrix4MakeTranslation(0.0f, 1.0f, 0.0f);
-    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrixForNormal), NULL);
+//    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrixForNormal), NULL);
     /////////////// test for normals - end
 } else {
     /////////////// original normals
-    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
+//    _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
     /////////////// original normals - end
 }
     
@@ -708,8 +1114,8 @@ if (0) {
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
     
     _rotationCube += self.timeSinceLastUpdate * 0.5f;
-    _rotationViewer += self.timeSinceLastUpdate * 0.5f;
-    _rotationNormal += self.timeSinceLastUpdate * 0.5f;
+//    _rotationViewer += self.timeSinceLastUpdate * 0.5f;
+//    _rotationNormal += self.timeSinceLastUpdate * 0.5f;
 }
 
 #else
@@ -728,15 +1134,19 @@ if (0) {
     // Render the object with GLKit
     [self.effect prepareToDraw];
     
-    glDrawArrays(GL_TRIANGLES, 0, NUMBER_VERTEX);
+    glDrawArrays(GL_TRIANGLES, 0, NUMBER_VERTICES_IN_WORLD);
     
     // Render the object again with ES2
     glUseProgram(_program);
     
     glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
-    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix.m);
+//    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix.m);
     
-    glDrawArrays(GL_TRIANGLES, 0, NUMBER_VERTEX);
+    // if ever we need a value sweeping between 0 and 1, use sebFloatUniform
+    GLfloat varValue = ((int)(_rotationCube * 100) % 100 ) / 100.0f;
+    GLint sebasUniformLoc = glGetUniformLocation(_program, "sebFloatUniform");
+    glUniform1f(sebasUniformLoc, varValue);
+    glDrawArrays(GL_TRIANGLES, 0, NUMBER_VERTICES_IN_WORLD);
 }
 
 #pragma mark -  OpenGL ES 2 shader compilation
@@ -772,7 +1182,8 @@ if (0) {
     // Bind attribute locations.
     // This needs to be done prior to linking.
     glBindAttribLocation(_program, GLKVertexAttribPosition, "position");
-    glBindAttribLocation(_program, GLKVertexAttribNormal, "normal");
+    // original before texture    glBindAttribLocation(_program, GLKVertexAttribNormal, "normal");
+    
     
     // Link program.
     if (![self linkProgram:_program]) {
@@ -796,7 +1207,15 @@ if (0) {
     
     // Get uniform locations.
     uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(_program, "modelViewProjectionMatrix");
-    uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(_program, "normalMatrix");
+//    uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(_program, "normalMatrix");
+    
+//    // For texture
+//    GLint samplerLoc = glGetUniformLocation(_program, "mytexture");
+//    // Indicate that the diffuse texture will be bound to texture unit 0
+//    GLint unit = 2;
+//    //glUniform1i(samplerLoc, unit);
+    
+    
     
     // Release vertex and fragment shaders.
     if (vertShader) {
@@ -890,5 +1309,49 @@ if (0) {
     
     return YES;
 }
+
+// TO DELETE
+//- (void) initializeGeometryAndTexture
+//
+//{
+//    pos_SKYBOX = (float*)malloc(NUMBER_FLOATS_IN_WORLD);
+//
+//    const XYZ_t verticesInfoUnitBox[] = {
+//        //                  x,       y,       z
+//        /*vertex [ 1]*/   { 0.5f,   -0.5f,    0.5f},
+//        /*vertex [ 2]*/   { 0.5f,    0.5f,    0.5f},
+//        /*vertex [ 3]*/   {-0.5f,    0.5f,    0.5f},
+//        /*vertex [ 4]*/   {-0.5f,   -0.5f,    0.5f},
+//        /*vertex [ 5]*/   { 0.5f,   -0.5f,    0.5f},
+//        /*vertex [ 6]*/   { 0.5f,   -0.5f,   -0.5f},
+//        /*vertex [ 7]*/   { 0.5f,    0.5f,   -0.5f},
+//        /*vertex [ 8]*/   {-0.5f,    0.5f,   -0.5f},
+//        /*vertex [ 9]*/   {-0.5f,   -0.5f,   -0.5f},
+//        /*vertex [10]*/   { 0.5f,   -0.5f,   -0.5f},
+//        /*vertex [11]*/   { 0.5f,   -0.5f,    0.5f},
+//        /*vertex [12]*/   {-0.5f,   -0.5f,    0.5f},
+//        /*vertex [13]*/   { 0.5f,   -0.5f,   -0.5f},
+//        /*vertex [14]*/   {-0.5f,   -0.5f,   -0.5f}
+//    };
+//    
+//    const XYZ_t pos_SKYBOX_local[] = {
+//        /*vertex [ 1]*/   { SKY_BOX_SCALE  *  SKY_BOX_SCALE,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 1].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 1].z},
+//        /*vertex [ 2]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 2].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 2].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 2].z},
+//        /*vertex [ 3]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 3].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 3].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 3].z},
+//        /*vertex [ 4]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 4].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 4].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 4].z},
+//        /*vertex [ 5]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 5].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 5].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 5].z},
+//        /*vertex [ 6]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 6].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 6].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 6].z},
+//        /*vertex [ 7]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 7].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 7].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 7].z},
+//        /*vertex [ 8]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 8].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 8].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 8].z},
+//        /*vertex [ 9]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[ 9].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[ 9].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[ 9].z},
+//        /*vertex [10]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[10].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[10].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[10].z},
+//        /*vertex [11]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[11].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[11].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[11].z},
+//        /*vertex [12]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[12].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[12].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[12].z},
+//        /*vertex [13]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[13].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[13].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[13].z},
+//        /*vertex [14]*/   { SKY_BOX_SCALE  *  verticesInfoUnitBox[14].x,   SKY_BOX_SCALE  *  verticesInfoUnitBox[14].y,    SKY_BOX_SCALE  *  verticesInfoUnitBox[14].z}
+//    };
+//
+//}
+
 
 @end

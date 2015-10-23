@@ -17,8 +17,6 @@
 		96A1C4991BC6D4EA0022270F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96A1C4971BC6D4EA0022270F /* LaunchScreen.storyboard */; };
 		96A1C4A41BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4A31BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESTests.m */; };
 		96A1C4AF1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */; };
-		96B8C6161BCD894F004B0187 /* item_powerup_fish.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6141BCD894F004B0187 /* item_powerup_fish.png */; settings = {ASSET_TAGS = (); }; };
-		96B8C6171BCD894F004B0187 /* tile_floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6151BCD894F004B0187 /* tile_floor.png */; settings = {ASSET_TAGS = (); }; };
 		96B8C6191BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */; settings = {ASSET_TAGS = (); }; };
 		96B8C61B1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl in Resources */ = {isa = PBXBuildFile; fileRef = 96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */; settings = {ASSET_TAGS = (); }; };
 		96E49F951BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c in Sources */ = {isa = PBXBuildFile; fileRef = 96E49F941BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c */; settings = {ASSET_TAGS = (); }; };
@@ -60,8 +58,6 @@
 		96A1C4AA1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		96A1C4AE1BC6D4EA0022270F /* SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SebTest_openGL_FromScratch_GameTemplate_GameTechOpenGL_ESUITests.m; sourceTree = "<group>"; };
 		96A1C4B01BC6D4EA0022270F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		96B8C6141BCD894F004B0187 /* item_powerup_fish.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = item_powerup_fish.png; sourceTree = "<group>"; };
-		96B8C6151BCD894F004B0187 /* tile_floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile_floor.png; sourceTree = "<group>"; };
 		96B8C6181BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Shader_VertexShader_WithTexture.glsl; path = Shaders/Shader_VertexShader_WithTexture.glsl; sourceTree = "<group>"; };
 		96B8C61A1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Shader_FragmentShader_WithTexture.glsl; path = Shaders/Shader_FragmentShader_WithTexture.glsl; sourceTree = "<group>"; };
 		96E49F941BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = Brudslojan_skybox_image_416x312_3_BytesPerPixel.c; path = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/Brudslojan_skybox_image_416x312_3_BytesPerPixel.c"; sourceTree = "<group>"; };
@@ -98,8 +94,6 @@
 			children = (
 				96E49F961BD8391A000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.h */,
 				96E49F941BD83832000F18EE /* Brudslojan_skybox_image_416x312_3_BytesPerPixel.c */,
-				96B8C6141BCD894F004B0187 /* item_powerup_fish.png */,
-				96B8C6151BCD894F004B0187 /* tile_floor.png */,
 				96A1C4841BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES */,
 				96A1C4A21BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESTests */,
 				96A1C4AD1BC6D4EA0022270F /* SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ESUITests */,
@@ -269,7 +263,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96B8C6171BCD894F004B0187 /* tile_floor.png in Resources */,
 				96B8C6191BCD907B004B0187 /* Shader_VertexShader_WithTexture.glsl in Resources */,
 				96A1C4941BC6D4EA0022270F /* Main.storyboard in Resources */,
 				96A1C48E1BC6D4EA0022270F /* Shader.vsh in Resources */,
@@ -277,7 +270,6 @@
 				96A1C4991BC6D4EA0022270F /* LaunchScreen.storyboard in Resources */,
 				96A1C48C1BC6D4EA0022270F /* Shader.fsh in Resources */,
 				96B8C61B1BCD910D004B0187 /* Shader_FragmentShader_WithTexture.glsl in Resources */,
-				96B8C6161BCD894F004B0187 /* item_powerup_fish.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -10,12 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
+            timestampString = "467304383.372382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "915"
-            endingLineNumber = "915"
-            landmarkName = "-compileShaderTexture:withType:"
+            startingLineNumber = "514"
+            endingLineNumber = "514"
+            landmarkName = "-setupGL"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
+            timestampString = "467304609.498202"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "919"
-            endingLineNumber = "919"
-            landmarkName = "-compileShaderTexture:withType:"
+            startingLineNumber = "645"
+            endingLineNumber = "645"
+            landmarkName = "-glkView:drawInRect:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -42,13 +42,42 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
+            timestampString = "467304383.372382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "905"
-            endingLineNumber = "905"
-            landmarkName = "-setupTexture:"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
+            landmarkName = "-prepareForDrawing_UnrolledSkybox_A"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.OpenGLErrorBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            breakpointStackSelectionBehavior = "1"
+            symbolName = "__GPUTOOLS_HAS_DETECTED_AN_OPENGL_ERROR__"
+            moduleName = "libglInterpose.dylib">
+            <Actions>
+               <BreakpointActionProxy
+                  ActionExtensionID = "Xcode.BreakpointAction.OpenGLError">
+                  <ActionContent>
+                  </ActionContent>
+               </BreakpointActionProxy>
+            </Actions>
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__GPUTOOLS_HAS_DETECTED_AN_OPENGL_ERROR__"
+                  moduleName = "libglInterpose.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  offsetFromSymbolStart = "0">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -58,60 +87,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
+            timestampString = "467304383.372382"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "863"
-            endingLineNumber = "863"
-            landmarkName = "-setupGL_Generated"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "774"
-            endingLineNumber = "774"
-            landmarkName = "-setupGL_Generated"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "720"
-            endingLineNumber = "720"
-            landmarkName = "-viewDidLoad"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "SebTest_openGL-FromScratch_GameTemplate_GameTechOpenGL_ES/GameViewController.m"
-            timestampString = "467235938.08356"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "846"
-            endingLineNumber = "846"
-            landmarkName = "-setupGL_Generated"
+            startingLineNumber = "448"
+            endingLineNumber = "448"
+            landmarkName = "-setupGL"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
